@@ -27,27 +27,36 @@ As an illustration, we used the sampling data from Rouillacais for hare only, in
 
 *The material of this analysis is provided for illustration purpose only. For other use or questions regarding the Hare network, feel free to contact us at reseau.lievre@oncfs.gouv.fr*
 
+*Place all following files in same directory as .Rmd*
+
+- [Point transect survey csv](Hare_data.csv)
+- [Study area shapefile shp](Contour_Rouillacais.shp)
+- [Study area shapefile shx](Contour_Rouillacais.shx)
+- [Study area shapefile dbf](Contour_Rouillacais.dbf)
+- [Point station shapefile shp](Rouillacais_points.shp)
+- [Point station shapefile shx](Rouillacais_points.shx)
+- [Point station shapefile dbf](Rouillacais_points.dbf)
+
+
+
 ## Observation data and covariates
 
 First, we load point transect survey data into `R` [@r_core_team_r_2019].
 
 ```{r data}
 # load raw data
-data <- read.table("Hare_data.csv", header = T, sep = ";")
+data <- read.table("Hare_data.csv", header = TRUE, sep = ";", stringsAsFactors=FALSE)
 str(data)
 ```
 
 Then, we build our dataset for the detection function.
 
 ```{r Dataset}
-DSdata <- as.data.frame(matrix(NA, ncol=7, nrow=dim(data)[1]))
-colnames(DSdata) <- c("Region.Label", "Sample.Label", "Effort", "distance", "Point", "Xcoord", "Ycoord")
-DSdata$Region.Label <- data$region
-DSdata$Sample.Label <- as.integer(data$point_ID)
-DSdata$Point <- data$point_ID
-DSdata$Xcoord <- as.integer(data$Xcoord)
-DSdata$Ycoord <- as.integer(data$Ycoord)
-DSdata$Area <- 1
+DSdata <- data.frame(Sample.Label = sub("Rouillacais_2016", "", data$point_ID),
+                     Point = data$point_ID,
+                     Xcoord = as.integer(data$Xcoord),
+                     Ycoord = as.integer(data$Ycoord),
+                     Area = 1)
 ```
 
 
